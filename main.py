@@ -29,7 +29,9 @@ def pca(x,handout=0.1,theta=0.70):
     pca.fit(train)
     egenval = pca.explained_variance_ratio_
     plt.plot([i for i in range(len(egenval))], egenval,'o-', linewidth=2, markersize=5)
-    plt.show()
+    plt.ylabel("Eignvalues")
+    plt.xlabel("Constructed Dimensions")
+    plt.savefig("pca_importance.png")
     dim = 0
     cnt = 0
     for val in egenval:
