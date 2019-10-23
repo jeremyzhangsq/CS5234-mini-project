@@ -1,10 +1,11 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+from skpp import ProjectionPursuitRegressor
 from sklearn.cluster import KMeans
 import math
 import time
+from sklearn import random_projection
 
 def read(name):
 
@@ -70,15 +71,38 @@ def Kmeans(matrix):
     return kmeans.cluster_centers_
 
 if __name__ == '__main__':
+    print ("begin")
     file = './jokeRate.txt'
     tweetMatrix = read(file)
+    Y = np.size (tweetMatrix,0) - np.arange (np.size (tweetMatrix,0))
     tick1 = time.time()
     Kmeans(tweetMatrix)
+    print (np.size (tweetMatrix, 0))
+    print (np.size (tweetMatrix, 1))
     # similarUser(tweetMatrix, 0)
     tick2 = time.time()
     print("without reduction:{}s".format(tick2-tick1))
     pcaMatrix = pca(tweetMatrix, 10)
     Kmeans(pcaMatrix)
+    print (np.size (pcaMatrix, 0))
+    print (np.size (pcaMatrix, 1))
     # similarUser(pcaMatrix, 0)
     tick3 = time.time()
     print("pca reduction:{}s".format(tick3 - tick2))
+    # estimator = ProjectionPursuitRegressor(r=80)
+    # print (estimator)
+    # ppMatrix = estimator.fit_transform(tweetMatrix, Y)
+    # print (np.size (ppMatrix,0))
+    # print (np.size (ppMatrix,1))
+    # Kmeans(ppMatrix)
+    Y = np.size (tweetMatrix,0) - np.arange(np.size (tweetMatrix,0))
+    estimator = ProjectionPursuitRegressor()
+    X_transformed = estimator.fit_transform(tweetMatrix, Y)
+    kmeans(X_transformed)
+    tick4 = time.time()
+    print("projection pursuit reduction:{}s".format(tick4 - tick3))
+    transformer = random_projection.GaussianRandomProjection(n_components=37)
+    JL_matrix = transformer.fit_transform(tweetMatrix)
+    Kmeans(JL_matrix)
+    tick5 = time.time()
+    print("JL reduction:{}s".format(tick5 - tick4))
