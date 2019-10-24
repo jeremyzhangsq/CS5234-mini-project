@@ -185,10 +185,24 @@ if __name__ == '__main__':
     print("pca reduction:{}s".format(tick3 - tick2))
 
     #X_transformed = pp (tweetMatrix)
-
-    for i in range (1, 99):
+    JL_matrix = JL(tweetMatrix, 100)
+    res = TopKAns(tweetMatrix, JL_matrix)
+    print(res)
+    exit(-1)
+    x = []
+    ans = []
+    for i in range (1, 19):
         tick4 = time.time()
-        JL_matrix = JL (tweetMatrix, i)
-        print (str (i) + "," + str (CommonAns (tweetMatrix, JL_matrix)) + "," + str ((TopKAns (tweetMatrix, JL_matrix))))
+        JL_matrix = JL (tweetMatrix, i*5)
+        x.append(i)
+        res = TopKAns(tweetMatrix, JL_matrix)
+        ans.append(res)
+        print (str (i) + "," + str (res))
         tick5 = time.time()
+    plt.figure()
+    plt.plot(x,ans,'o-', linewidth=2, markersize=5)
+    plt.ylabel("Accuracy (%)")
+    plt.xlabel("Dimensions")
+    plt.savefig("jl_dim_accuracy.png")
+
 	#print("JL reduction:{}s".format(tick5 - tick4))
