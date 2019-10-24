@@ -4,6 +4,7 @@ from sklearn.decomposition import PCA
 from skpp import ProjectionPursuitRegressor
 from sklearn.cluster import KMeans
 from scipy.stats import pearsonr
+from mpl_toolkits.mplot3d import Axes3D
 from sklearn.metrics import f1_score,precision_score,recall_score
 import math
 import time
@@ -45,6 +46,23 @@ def pca(x,handout=0.1,theta=0.66):
     pca = PCA(n_components=dim)
     decoposeX = pca.fit_transform(x)
     return decoposeX
+
+def pcaVisual(x,handout=0.1):
+    pca = PCA(n_components=3)
+    train = x[:int(x.shape[0] * handout)]
+    result = pca.fit_transform(train)
+    x = []
+    y = []
+    z = []
+    for each in result:
+        x.append(each[0])
+        y.append(each[1])
+        z.append(each[2])
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(x,y,z)
+    plt.savefig("pca_visual.png")
+
 
 def pearson_def(x, y):
     return pearsonr(x,y)[0]
@@ -160,6 +178,8 @@ if __name__ == '__main__':
     tick2 = time.time()
     print("without reduction:{}s".format(tick2-tick1))
     pcaMatrix = pca(tweetMatrix)
+    pcaVisual(tweetMatrix)
+    exit(-1)
     clusters2 = Kmeans(pcaMatrix)
     print (np.size (pcaMatrix, 0))
     print (np.size (pcaMatrix, 1))

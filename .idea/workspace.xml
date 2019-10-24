@@ -4,7 +4,6 @@
     <list default="true" id="359dfa3d-b11d-4485-9622-9715c4d4dc4c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pca_importance.png" beforeDir="false" afterPath="$PROJECT_DIR$/pca_importance.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../PhD-Foundation/minimum-spanning-tree/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../PhD-Foundation/minimum-spanning-tree/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../PhD-Foundation/minimum-spanning-tree/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/../PhD-Foundation/minimum-spanning-tree/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../PhD-Foundation/minimum-spanning-tree/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../PhD-Foundation/minimum-spanning-tree/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
@@ -26,20 +25,30 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/CS5234_mini_project$main.coverage" NAME="main Coverage Results" MODIFIED="1571900080316" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CS5234_mini_project$main.coverage" NAME="main Coverage Results" MODIFIED="1571901894473" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="481">
-              <caret line="177" column="21" selection-start-line="177" selection-start-column="21" selection-end-line="177" selection-end-column="21" />
+            <state relative-caret-position="435">
+              <caret line="179" column="11" selection-start-line="179" selection-start-column="11" selection-end-line="179" selection-end-column="11" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pca_visual.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pca_importance.png">
+          <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
     </leaf>
@@ -154,12 +163,12 @@
       <workItem from="1571732491089" duration="4124000" />
       <workItem from="1571741545647" duration="4517000" />
       <workItem from="1571833314340" duration="645000" />
-      <workItem from="1571896340465" duration="2959000" />
+      <workItem from="1571896340465" duration="4342000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12245000" />
+    <option name="totallyTimeSpent" value="13628000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1920" y="0" width="1920" height="1080" extended-state="0" />
@@ -193,6 +202,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>55</line>
+          <option name="timeStamp" value="30" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -221,10 +237,13 @@
     <entry file="file://$PROJECT_DIR$/pca_importance.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/pca_visual.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="481">
-          <caret line="177" column="21" selection-start-line="177" selection-start-column="21" selection-end-line="177" selection-end-column="21" />
+        <state relative-caret-position="435">
+          <caret line="179" column="11" selection-start-line="179" selection-start-column="11" selection-end-line="179" selection-end-column="11" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
