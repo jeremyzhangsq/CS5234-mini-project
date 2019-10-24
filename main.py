@@ -73,10 +73,6 @@ def takeSecond(elem):
 def similarUser(matrix,query):
     q = matrix[query]
     result = []
-    for row in matrix:
-        result.append(pearson_def(q,row))
-    return result
-
     # tot = 0.0
     for i_row in range (len (matrix)):
         row = matrix[i_row]
@@ -148,7 +144,7 @@ def CommonAns (matrix, trans):
 def TopKAns (matrix, trans, k = 100):
     ret = []
     n = np.size (matrix, 0)
-    for i in range (40):
+    for i in range (100):
         a_list = similarUser (matrix, i)
         b_list = similarUser (trans, i)
         now = 0
@@ -177,10 +173,9 @@ if __name__ == '__main__':
     # similarUser(tweetMatrix, 0)
     tick2 = time.time()
     print("without reduction:{}s".format(tick2-tick1))
-    pcaMatrix = pca(tweetMatrix)
-    pcaVisual(tweetMatrix)
-    exit(-1)
-    clusters2 = Kmeans(pcaMatrix)
+
+    pcaMatrix = pca(tweetMatrix, 10)
+    Kmeans(pcaMatrix)
     print (np.size (pcaMatrix, 0))
     print (np.size (pcaMatrix, 1))
     # similarUser(pcaMatrix, 0)
@@ -189,15 +184,11 @@ if __name__ == '__main__':
     print (TopKAns (tweetMatrix, pcaMatrix))
     print("pca reduction:{}s".format(tick3 - tick2))
 
-    X_transformed = pp (tweetMatrix)
-    print (CommonAns (tweetMatrix, X_transformed))
-    print (TopKAns (tweetMatrix, X_transformed))
-    tick4 = time.time()
-    print("projection pursuit reduction:{}s".format(tick4 - tick3))
+    #X_transformed = pp (tweetMatrix)
 
-    for i in range (2, 99):
+    for i in range (1, 99):
         tick4 = time.time()
         JL_matrix = JL (tweetMatrix, i)
         print (str (i) + "," + str (CommonAns (tweetMatrix, JL_matrix)) + "," + str ((TopKAns (tweetMatrix, JL_matrix))))
         tick5 = time.time()
-        print("JL reduction:{}s".format(tick5 - tick4))
+	#print("JL reduction:{}s".format(tick5 - tick4))
