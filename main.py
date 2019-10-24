@@ -3,8 +3,6 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from skpp import ProjectionPursuitRegressor
 from sklearn.cluster import KMeans
-from scipy.stats import pearsonr
-from sklearn.metrics import f1_score,precision_score,recall_score
 import math
 import time
 from sklearn import random_projection
@@ -26,7 +24,7 @@ def read(name):
     return np.array(matrix)
 
 
-def pca(x,handout=0.1,theta=0.66):
+def pca(x,handout=0.1,theta=0.70):
     pca = PCA()
     train = x[:int(x.shape[0]*handout)]
     pca.fit(train)
@@ -47,7 +45,21 @@ def pca(x,handout=0.1,theta=0.66):
     return decoposeX
 
 def pearson_def(x, y):
-    return pearsonr(x,y)[0]
+    assert len(x) == len(y)
+    n = len(x)
+    assert n > 0
+    avg_x = float(sum(x)) / len(x)
+    avg_y = float(sum(y)) / len(y)
+    diffprod = 0
+    xdiff2 = 0
+    ydiff2 = 0
+    for idx in range(n):
+        xdiff = x[idx] - avg_x
+        ydiff = y[idx] - avg_y
+        diffprod += xdiff * ydiff
+        xdiff2 += xdiff * xdiff
+        ydiff2 += ydiff * ydiff
+    return diffprod / math.sqrt(xdiff2 * ydiff2)
 
 def takeSecond(elem):
     return elem[1]
@@ -55,10 +67,6 @@ def takeSecond(elem):
 def similarUser(matrix,query):
     q = matrix[query]
     result = []
-    for row in matrix:
-        result.append(pearson_def(q,row))
-    return result
-
     # tot = 0.0
     for i_row in range (len (matrix)):
         row = matrix[i_row]
@@ -101,12 +109,8 @@ def JL (tweetMatrix, x):
     return JL
 
 def Kmeans(matrix):
-    kmeans = KMeans(n_clusters=10, random_state=1).fit(matrix)
-    return kmeans.labels_
-
-def f1_score(truth,train):
-    pass
-
+    kmeans = KMeans(n_clusters=10).fit(matrix)
+    return kmeans.cluster_centers_
 
 def avg (l):
     tot = 0.0
@@ -130,7 +134,7 @@ def CommonAns (matrix, trans):
 def TopKAns (matrix, trans, k = 100):
     ret = []
     n = np.size (matrix, 0)
-    for i in range (40):
+    for i in range (100):
         a_list = similarUser (matrix, i)
         b_list = similarUser (trans, i)
         now = 0
@@ -159,8 +163,9 @@ if __name__ == '__main__':
     # similarUser(tweetMatrix, 0)
     tick2 = time.time()
     print("without reduction:{}s".format(tick2-tick1))
-    pcaMatrix = pca(tweetMatrix)
-    clusters2 = Kmeans(pcaMatrix)
+
+    pcaMatrix = pca(tweetMatrix, 10)
+    Kmeans(pcaMatrix)
     print (np.size (pcaMatrix, 0))
     print (np.size (pcaMatrix, 1))
     # similarUser(pcaMatrix, 0)
@@ -169,15 +174,11 @@ if __name__ == '__main__':
     print (TopKAns (tweetMatrix, pcaMatrix))
     print("pca reduction:{}s".format(tick3 - tick2))
 
-    X_transformed = pp (tweetMatrix)
-    print (CommonAns (tweetMatrix, X_transformed))
-    print (TopKAns (tweetMatrix, X_transformed))
-    tick4 = time.time()
-    print("projection pursuit reduction:{}s".format(tick4 - tick3))
+    #X_transformed = pp (tweetMatrix)
 
-    for i in range (2, 99):
+    for i in range (1, 99):
         tick4 = time.time()
         JL_matrix = JL (tweetMatrix, i)
         print (str (i) + "," + str (CommonAns (tweetMatrix, JL_matrix)) + "," + str ((TopKAns (tweetMatrix, JL_matrix))))
         tick5 = time.time()
-        print("JL reduction:{}s".format(tick5 - tick4))
+	#print("JL reduction:{}s".format(tick5 - tick4))
