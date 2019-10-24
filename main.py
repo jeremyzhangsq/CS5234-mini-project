@@ -65,6 +65,15 @@ def similarUser(matrix,query):
     for row in matrix:
         result.append(pearson_def(q,row))
     return result
+def pp (tweetMatrix):
+    Y = np.size (tweetMatrix,0) - np.arange(np.size (tweetMatrix,0))
+    estimator = ProjectionPursuitRegressor()
+    X_t = estimator.fit_transform(tweetMatrix, Y)
+    return X_t
+def JL (tweetMatrix):
+    transformer = random_projection.GaussianRandomProjection(n_components=37)
+    JL = transformer.fit_transform(tweetMatrix)
+    return JL
 
 def Kmeans(matrix):
     kmeans = KMeans(n_clusters=10).fit(matrix)
@@ -74,6 +83,11 @@ if __name__ == '__main__':
     print ("begin")
     file = './jokeRate.txt'
     tweetMatrix = read(file)
+
+    # print (tweetMatrix.shape)
+    # tweetMatrix = tweetMatrix[0:10000,]
+    # print (tweetMatrix.shape)
+
     Y = np.size (tweetMatrix,0) - np.arange (np.size (tweetMatrix,0))
     tick1 = time.time()
     Kmeans(tweetMatrix)
@@ -82,6 +96,7 @@ if __name__ == '__main__':
     # similarUser(tweetMatrix, 0)
     tick2 = time.time()
     print("without reduction:{}s".format(tick2-tick1))
+
     pcaMatrix = pca(tweetMatrix, 10)
     Kmeans(pcaMatrix)
     print (np.size (pcaMatrix, 0))
@@ -89,20 +104,13 @@ if __name__ == '__main__':
     # similarUser(pcaMatrix, 0)
     tick3 = time.time()
     print("pca reduction:{}s".format(tick3 - tick2))
-    # estimator = ProjectionPursuitRegressor(r=80)
-    # print (estimator)
-    # ppMatrix = estimator.fit_transform(tweetMatrix, Y)
-    # print (np.size (ppMatrix,0))
-    # print (np.size (ppMatrix,1))
-    # Kmeans(ppMatrix)
-    Y = np.size (tweetMatrix,0) - np.arange(np.size (tweetMatrix,0))
-    estimator = ProjectionPursuitRegressor()
-    X_transformed = estimator.fit_transform(tweetMatrix, Y)
-    kmeans(X_transformed)
+
+    X_transformed = pp (tweetMatrix)
+    Kmeans(X_transformed)
     tick4 = time.time()
     print("projection pursuit reduction:{}s".format(tick4 - tick3))
-    transformer = random_projection.GaussianRandomProjection(n_components=37)
-    JL_matrix = transformer.fit_transform(tweetMatrix)
+
+    JL_matrix = JL (tweetMatrix)
     Kmeans(JL_matrix)
     tick5 = time.time()
     print("JL reduction:{}s".format(tick5 - tick4))
