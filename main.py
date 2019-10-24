@@ -175,7 +175,7 @@ if __name__ == '__main__':
     tick4 = time.time()
     print("projection pursuit reduction:{}s".format(tick4 - tick3))
 
-    for i in range (1, 99):
+    for i in range (2, 99):
         tick4 = time.time()
         JL_matrix = JL (tweetMatrix, i)
         print (str (i) + "," + str (CommonAns (tweetMatrix, JL_matrix)) + "," + str ((TopKAns (tweetMatrix, JL_matrix))))
