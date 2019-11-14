@@ -26,6 +26,21 @@ def read(name):
             matrix.append(l)
     return np.array(matrix)
 
+def readDoc(name):
+    with open(name) as f:
+        N = int(f.readline().rstrip("\n"))
+        D = int(f.readline().rstrip("\n"))
+        C = int(f.readline().rstrip("\n"))
+        matrix = np.zeros((N,D), dtype=int)
+        for i in range(C):
+            s = f.readline().rstrip("\n")
+            s = s.split(" ")
+            doc = int(s[0])-1
+            word = int(s[1])-1
+            cnt = int(s[2])
+            matrix[doc][word] = cnt
+    return matrix
+
 
 def pca(x,handout=0.1,theta=0.66):
     pca = PCA()
@@ -118,10 +133,6 @@ def Kmeans(matrix):
     kmeans = KMeans(n_clusters=10, random_state=1).fit(matrix)
     return kmeans.labels_
 
-def f1_score(truth,train):
-    pass
-
-
 def avg (l):
     tot = 0.0
     for i in l:
@@ -160,9 +171,12 @@ def TopKAns (matrix, trans, k = 100):
 
 if __name__ == '__main__':
     print ("begin")
-    file = './jokeRate.txt'
-    tweetMatrix = read(file)
 
+    # file = './jokeRate.txt'
+    # tweetMatrix = read(file)
+    #
+    file = './nips.txt'
+    docMatrix = readDoc(file)
     # print (tweetMatrix.shape)
     tweetMatrix = tweetMatrix[0:1000,]
     # print (tweetMatrix.shape)
