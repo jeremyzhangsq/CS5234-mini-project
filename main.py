@@ -211,73 +211,73 @@ if __name__ == '__main__':
     topK = 0
 
     # T_list = [100, 1000,2000,5000,10000,20000]
-    T_list = [100]
+    T_list = [100,500]
     for t in T_list:
         CurTime = []
         CurScore = []
         print("data size =========================   ", t)
-    tweetMatrix = TweetMatrix[0:t, ]
-    # print (metrics.adjusted_rand_score (label, label))
+        tweetMatrix = TweetMatrix[0:t, ]
+        # print (metrics.adjusted_rand_score (label, label))
 
-    if topK == 1:
-        begin = time.time()
-        print(TopKAns(tweetMatrix, tweetMatrix))
+        if topK == 1:
+            begin = time.time()
+            print(TopKAns(tweetMatrix, tweetMatrix))
+            end = time.time()
+            CurTime.append(end - begin)
+            CurScore.append(1.0) // todo
+            # print("no reduction:{}s".format(end - begin))
+        else:
+            begin = time.time()
+        label = kmeans(tweetMatrix)
         end = time.time()
         CurTime.append(end - begin)
-        CurScore.append(1.0) // todo
-        # print("no reduction:{}s".format(end - begin))
-    else:
+        CurScore.append(1.0)
+
         begin = time.time()
-    label = kmeans(tweetMatrix)
-    end = time.time()
-    CurTime.append(end - begin)
-    CurScore.append(1.0)
+        pcaMatrix = pca(tweetMatrix, LessDimension)
+        if topK == 1:
+            print(TopKAns(tweetMatrix, pcaMatrix))
+        else:
+            pcaLabel = kmeans(pcaMatrix)
+        end = time.time()
 
-    begin = time.time()
-    pcaMatrix = pca(tweetMatrix, LessDimension)
-    if topK == 1:
-        print(TopKAns(tweetMatrix, pcaMatrix))
-    else:
-        pcaLabel = kmeans(pcaMatrix)
-    end = time.time()
+        if topK == 1:
+            CurTime.append(end - begin)
+            CurScore.append(1.0) // todo
+        else:
+            CurTime.append(end - begin)
+            CurScore.append(metrics.adjusted_rand_score(label, pcaLabel))
 
-    if topK == 1:
-        CurTime.append(end - begin)
-        CurScore.append(1.0) // todo
-    else:
-        CurTime.append(end - begin)
-        CurScore.append(metrics.adjusted_rand_score(label, pcaLabel))
+        # print("pca reduction:{}s".format(end - begin))
+        # print ("PCA score  :: ", )
 
-    # print("pca reduction:{}s".format(end - begin))
-    # print ("PCA score  :: ", )
+        # begin = time.time ()
+        # X_transformed = pp (tweetMatrix, LessDimension)
+        # print (TopKAns (tweetMatrix, X_transformed))
+        # end = time.time()
+        # print("pp reduction:{}s".format(end - begin))
+        # Xlabel = kmeans (X_transformed)
+        # print (metrics.adjusted_rand_score (label, Xlabel))
 
-    # begin = time.time ()
-    # X_transformed = pp (tweetMatrix, LessDimension)
-    # print (TopKAns (tweetMatrix, X_transformed))
-    # end = time.time()
-    # print("pp reduction:{}s".format(end - begin))
-    # Xlabel = kmeans (X_transformed)
-    # print (metrics.adjusted_rand_score (label, Xlabel))
+        begin = time.time()
+        JL_matrix = JL(tweetMatrix, LessDimension)
+        if topK == 1:
+            print(TopKAns(tweetMatrix, JL_matrix))
+        else:
+            JL_label = kmeans(JL_matrix)
+        end = time.time()
 
-    begin = time.time()
-    JL_matrix = JL(tweetMatrix, LessDimension)
-    if topK == 1:
-        print(TopKAns(tweetMatrix, JL_matrix))
-    else:
-        JL_label = kmeans(JL_matrix)
-    end = time.time()
+        if topK == 1:
+            CurTime.append(end - begin)
+            CurScore.append(1.0) // todo
+        else:
+            CurTime.append(end - begin)
+            CurScore.append(metrics.adjusted_rand_score(label, JL_label))
 
-    if topK == 1:
-        CurTime.append(end - begin)
-        CurScore.append(1.0) // todo
-    else:
-        CurTime.append(end - begin)
-        CurScore.append(metrics.adjusted_rand_score(label, JL_label))
+        RunTime.append(CurTime)
+        RunScore.append(CurScore)
 
-    RunTime.append(CurTime)
-    RunScore.append(CurScore)
-
-    # print("JL reduction:{}s".format(end - begin))
-    # print ("JL score : ", metrics.adjusted_rand_score (label, JL_label))
+        # print("JL reduction:{}s".format(end - begin))
+        # print ("JL score : ", metrics.adjusted_rand_score (label, JL_label))
     print(RunTime)
     print(RunScore)
