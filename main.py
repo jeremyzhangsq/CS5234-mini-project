@@ -210,8 +210,8 @@ if __name__ == '__main__':
 
     topK = 0
 
-    # T_list = [100, 1000,2000,5000,10000,20000]
-    T_list = [100,500]
+    T_list = [100, 1000,2000,5000,10000,20000]
+    # T_list = [100,500]
     for t in T_list:
         CurTime = []
         CurScore = []
@@ -281,3 +281,15 @@ if __name__ == '__main__':
         # print ("JL score : ", metrics.adjusted_rand_score (label, JL_label))
     print(RunTime)
     print(RunScore)
+
+    len = len (T_list)
+    for i in range (len):
+        print (T_list[i], end = " ")
+        for j in RunTime[i]:
+            print (j, end = " ")
+        print ('\n', end = " ")
+    for i in range (len):
+        print (T_list[i], end = " ")
+        for j in RunScore[i]:
+            print (j, end = " ")
+        print ('\n', end = " ")
