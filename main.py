@@ -208,13 +208,14 @@ if __name__ == '__main__':
     file = './nips.txt'
     TweetMatrix = readDoc(file)
 
-    topK = 0
+    topK = 1
 
     if topK == 1:
         T_list = [100, 1000,2000,5000,10000,20000]
     else:
         T_list = [100, 1000,1500]
-    # T_list = [100,500]
+
+    T_list = [100,500]
     for t in T_list:
         CurTime = []
         CurScore = []
@@ -224,10 +225,10 @@ if __name__ == '__main__':
 
         if topK == 1:
             begin = time.time()
-            print(TopKAns(tweetMatrix, tweetMatrix))
+            CurScore.append(TopKAns(tweetMatrix, tweetMatrix))
             end = time.time()
             CurTime.append(end - begin)
-            CurScore.append(1.0) // todo
+            # CurScore.append(1.0) # todo
             # print("no reduction:{}s".format(end - begin))
         else:
             begin = time.time()
@@ -239,14 +240,14 @@ if __name__ == '__main__':
         begin = time.time()
         pcaMatrix = pca(tweetMatrix, LessDimension)
         if topK == 1:
-            print(TopKAns(tweetMatrix, pcaMatrix))
+            CurScore.append(TopKAns(tweetMatrix, pcaMatrix))
         else:
             pcaLabel = kmeans(pcaMatrix)
         end = time.time()
 
         if topK == 1:
             CurTime.append(end - begin)
-            CurScore.append(1.0) // todo
+            # CurScore.append(1.0) // todo
         else:
             CurTime.append(end - begin)
             CurScore.append(metrics.adjusted_rand_score(label, pcaLabel))
@@ -265,14 +266,14 @@ if __name__ == '__main__':
         begin = time.time()
         JL_matrix = JL(tweetMatrix, LessDimension)
         if topK == 1:
-            print(TopKAns(tweetMatrix, JL_matrix))
+            CurScore.append(TopKAns(tweetMatrix, JL_matrix))
         else:
             JL_label = kmeans(JL_matrix)
         end = time.time()
 
         if topK == 1:
             CurTime.append(end - begin)
-            CurScore.append(1.0) // todo
+            # CurScore.append(1.0) // todo
         else:
             CurTime.append(end - begin)
             CurScore.append(metrics.adjusted_rand_score(label, JL_label))
