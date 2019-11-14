@@ -1,17 +1,20 @@
 import numpy as np
+import random
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from skpp import ProjectionPursuitRegressor
 from sklearn.cluster import KMeans
 from scipy.stats import pearsonr
 from mpl_toolkits.mplot3d import Axes3D
-from sklearn.metrics import f1_score,precision_score,recall_score
+from sklearn.metrics import f1_score, precision_score, recall_score
 import math
 import time
 from sklearn import random_projection
+from sklearn.cluster import KMeans
+from sklearn import metrics
+
 
 def read(name):
-
     matrix = []
     with open(name, encoding="utf8", errors='ignore') as f:
         for line in f.readlines():
@@ -26,43 +29,29 @@ def read(name):
             matrix.append(l)
     return np.array(matrix)
 
-def readDoc(name):
-    with open(name) as f:
-        N = int(f.readline().rstrip("\n"))
-        D = int(f.readline().rstrip("\n"))
-        C = int(f.readline().rstrip("\n"))
-        matrix = np.zeros((N,D), dtype=int)
-        for i in range(C):
-            s = f.readline().rstrip("\n")
-            s = s.split(" ")
-            doc = int(s[0])-1
-            word = int(s[1])-1
-            cnt = int(s[2])
-            matrix[doc][word] = cnt
-    return matrix
 
-
-def pca(x,handout=0.1,theta=0.66):
-    pca = PCA()
-    train = x[:int(x.shape[0]*handout)]
-    pca.fit(train)
-    egenval = pca.explained_variance_ratio_
-    plt.plot([i for i in range(len(egenval))], egenval,'o-', linewidth=2, markersize=5)
-    plt.ylabel("Eignvalues")
-    plt.xlabel("Constructed Dimensions")
-    plt.savefig("pca_importance.png")
-    dim = 0
-    cnt = 0
-    for val in egenval:
-        cnt += val
-        dim +=1
-        if cnt >= theta:
-            break
-    pca = PCA(n_components=dim)
+def pca(x, k, handout=0.1, theta=0.66):
+    # pca = PCA()
+    # train = x[:int(x.shape[0]*handout)]
+    # pca.fit(train)
+    # egenval = pca.explained_variance_ratio_
+    # # plt.plot([i for i in range(len(egenval))], egenval,'o-', linewidth=2, markersize=5)
+    # # plt.ylabel("Eignvalues")
+    # # plt.xlabel("Constructed Dimensions")
+    # # plt.savefig("pca_importance.png")
+    # dim = 0
+    # cnt = 0
+    # for val in egenval:
+    #     cnt += val
+    #     dim +=1
+    #     if cnt >= theta:
+    #         break
+    pca = PCA(n_components=k)
     decoposeX = pca.fit_transform(x)
     return decoposeX
 
-def pcaVisual(x,handout=0.1):
+
+def pcaVisual(x, handout=0.1):
     pca = PCA(n_components=3)
     train = x[:int(x.shape[0] * handout)]
     result = pca.fit_transform(train)
@@ -75,23 +64,25 @@ def pcaVisual(x,handout=0.1):
         z.append(each[2])
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.scatter(x,y,z)
+    ax.scatter(x, y, z)
     plt.savefig("pca_visual.png")
 
 
 def pearson_def(x, y):
-    return pearsonr(x,y)[0]
+    return pearsonr(x, y)[0]
+
 
 def takeSecond(elem):
     return elem[1]
 
-def similarUser(matrix,query):
+
+def similarUser(matrix, query):
     q = matrix[query]
     result = []
     # tot = 0.0
-    for i_row in range (len (matrix)):
+    for i_row in range(len(matrix)):
         row = matrix[i_row]
-        cur = [i_row, pearson_def(q,row)]
+        cur = [i_row, pearson_def(q, row)]
         result.append(cur)
         # tot = tot + pearson_def(q,row)
     # print (len (result))
@@ -101,122 +92,192 @@ def similarUser(matrix,query):
     # print ("result after, ", result)
     ret = []
     for i in result:
-        ret.append (i[0])
+        ret.append(i[0])
     # print (ret)
     return ret
 
-def SimilarAvg (matrix):
-    n = np.size (matrix, 0)
-    m = np.size (matrix, 1)
+
+def SimilarAvg(matrix):
+    n = np.size(matrix, 0)
+    m = np.size(matrix, 1)
     tot = 0.0
-    for i in range (10):
+    for i in range(10):
         # a = np.zeros (m)
         # a[i] = 1
-        now = similarUser (matrix, i)
-        print (now)
+        now = similarUser(matrix, i)
+        print(now)
         tot += now
     return tot
 
-def pp (tweetMatrix):
-    Y = np.size (tweetMatrix,0) - np.arange(np.size (tweetMatrix,0))
-    estimator = ProjectionPursuitRegressor()
+
+def pp(tweetMatrix, k):
+    Y = np.size(tweetMatrix, 0) - np.arange(np.size(tweetMatrix, 0))
+    estimator = ProjectionPursuitRegressor(r=k)
     X_t = estimator.fit_transform(tweetMatrix, Y)
     return X_t
 
-def JL (tweetMatrix, x):
+
+def JL(tweetMatrix, x):
     transformer = random_projection.GaussianRandomProjection(n_components=x)
     # transformer = random_projection.GaussianRandomProjection()
     JL = transformer.fit_transform(tweetMatrix)
     return JL
 
+
 def Kmeans(matrix):
     kmeans = KMeans(n_clusters=10, random_state=1).fit(matrix)
     return kmeans.labels_
 
-def avg (l):
+
+def f1_score(truth, train):
+    pass
+
+
+def avg(l):
     tot = 0.0
     for i in l:
         tot = tot + i
-    return tot / len (l)
+    return tot / len(l)
 
-def CommonAns (matrix, trans):
+
+def CommonAns(matrix, trans):
     ret = []
-    n = np.size (matrix, 0)
-    for i in range (40):
-        a_list = similarUser (matrix, i)
-        b_list = similarUser (trans, i)
+    n = np.size(matrix, 0)
+    for i in range(40):
+        a_list = similarUser(matrix, i)
+        b_list = similarUser(trans, i)
         now = 0
-        for j in range (len (a_list)):
-            if a_list [j] == b_list[j]:
+        for j in range(len(a_list)):
+            if a_list[j] == b_list[j]:
                 now = now + 1
-        ret.append (now)
+        ret.append(now)
     return avg(ret)
 
-def TopKAns (matrix, trans, k = 100):
+
+def TopKAns(matrix, trans, k=100):
     ret = []
-    n = np.size (matrix, 0)
-    for i in range (100):
-        a_list = similarUser (matrix, i)
-        b_list = similarUser (trans, i)
+    n = np.size(matrix, 0)
+    for i in range(100):
+        choice = random.randrange(0, n)
+        a_list = similarUser(matrix, choice)
+        b_list = similarUser(trans, choice)
         now = 0
-        st = set ()
-        for j in range (k):
-            st.add (a_list[j])
-        for j in range (k):
+        st = set()
+        for j in range(k):
+            st.add(a_list[j])
+        for j in range(k):
             if b_list[j] in st:
-            # if (st.find (b_list[j])):
+                # if (st.find (b_list[j])):
                 now = now + 1
-        ret.append (now)
+        ret.append(now)
     return avg(ret)
+
+
+def readDoc(name):
+    with open(name) as f:
+        N = int(f.readline().rstrip("\n"))
+        D = int(f.readline().rstrip("\n"))
+        C = int(f.readline().rstrip("\n"))
+        matrix = np.zeros((N, D), dtype=int)
+        for i in range(C):
+            s = f.readline().rstrip("\n")
+            s = s.split(" ")
+            doc = int(s[0]) - 1
+            word = int(s[1]) - 1
+            cnt = int(s[2])
+            matrix[doc][word] = cnt
+    return matrix
+
+
+def kmeans(data):
+    estimator = KMeans(n_clusters=9)  # 构造聚类器
+    estimator.fit(data)  # 聚类
+    # print ("kmeans time : ", end - begin)
+    label_pred = estimator.labels_
+    # print (label_pred)
+    return label_pred
+
 
 if __name__ == '__main__':
-    print ("begin")
-
+    RunTime = []
+    RunScore = []
+    LessDimension = 32
+    print("begin")
     # file = './jokeRate.txt'
-    # tweetMatrix = read(file)
-    #
+    # TweetMatrix = read(file)
     file = './nips.txt'
-    docMatrix = readDoc(file)
-    # print (tweetMatrix.shape)
-    tweetMatrix = tweetMatrix[0:1000,]
-    # print (tweetMatrix.shape)
+    TweetMatrix = readDoc(file)
 
-    Y = np.size (tweetMatrix,0) - np.arange (np.size (tweetMatrix,0))
-    tick1 = time.time()
-    Kmeans(tweetMatrix)
-    # similarUser(tweetMatrix, 0)
-    tick2 = time.time()
-    print("without reduction:{}s".format(tick2-tick1))
+    topK = 0
 
-    pcaMatrix = pca(tweetMatrix, 10)
-    Kmeans(pcaMatrix)
-    print (np.size (pcaMatrix, 0))
-    print (np.size (pcaMatrix, 1))
-    # similarUser(pcaMatrix, 0)
-    tick3 = time.time()
-    print (CommonAns (tweetMatrix, pcaMatrix))
-    print (TopKAns (tweetMatrix, pcaMatrix))
-    print("pca reduction:{}s".format(tick3 - tick2))
+    # T_list = [100, 1000,2000,5000,10000,20000]
+    T_list = [100]
+    for t in T_list:
+        CurTime = []
+        CurScore = []
+        print("data size =========================   ", t)
+    tweetMatrix = TweetMatrix[0:t, ]
+    # print (metrics.adjusted_rand_score (label, label))
 
-    #X_transformed = pp (tweetMatrix)
-    JL_matrix = JL(tweetMatrix, 100)
-    res = TopKAns(tweetMatrix, JL_matrix)
-    print(res)
-    exit(-1)
-    x = []
-    ans = []
-    for i in range (1, 19):
-        tick4 = time.time()
-        JL_matrix = JL (tweetMatrix, i*5)
-        x.append(i)
-        res = TopKAns(tweetMatrix, JL_matrix)
-        ans.append(res)
-        print (str (i) + "," + str (res))
-        tick5 = time.time()
-    plt.figure()
-    plt.plot(x,ans,'o-', linewidth=2, markersize=5)
-    plt.ylabel("Accuracy (%)")
-    plt.xlabel("Dimensions")
-    plt.savefig("jl_dim_accuracy.png")
+    if topK == 1:
+        begin = time.time()
+        print(TopKAns(tweetMatrix, tweetMatrix))
+        end = time.time()
+        CurTime.append(end - begin)
+        CurScore.append(1.0) // todo
+        # print("no reduction:{}s".format(end - begin))
+    else:
+        begin = time.time()
+    label = kmeans(tweetMatrix)
+    end = time.time()
+    CurTime.append(end - begin)
+    CurScore.append(1.0)
 
-	#print("JL reduction:{}s".format(tick5 - tick4))
+    begin = time.time()
+    pcaMatrix = pca(tweetMatrix, LessDimension)
+    if topK == 1:
+        print(TopKAns(tweetMatrix, pcaMatrix))
+    else:
+        pcaLabel = kmeans(pcaMatrix)
+    end = time.time()
+
+    if topK == 1:
+        CurTime.append(end - begin)
+        CurScore.append(1.0) // todo
+    else:
+        CurTime.append(end - begin)
+        CurScore.append(metrics.adjusted_rand_score(label, pcaLabel))
+
+    # print("pca reduction:{}s".format(end - begin))
+    # print ("PCA score  :: ", )
+
+    # begin = time.time ()
+    # X_transformed = pp (tweetMatrix, LessDimension)
+    # print (TopKAns (tweetMatrix, X_transformed))
+    # end = time.time()
+    # print("pp reduction:{}s".format(end - begin))
+    # Xlabel = kmeans (X_transformed)
+    # print (metrics.adjusted_rand_score (label, Xlabel))
+
+    begin = time.time()
+    JL_matrix = JL(tweetMatrix, LessDimension)
+    if topK == 1:
+        print(TopKAns(tweetMatrix, JL_matrix))
+    else:
+        JL_label = kmeans(JL_matrix)
+    end = time.time()
+
+    if topK == 1:
+        CurTime.append(end - begin)
+        CurScore.append(1.0) // todo
+    else:
+        CurTime.append(end - begin)
+        CurScore.append(metrics.adjusted_rand_score(label, JL_label))
+
+    RunTime.append(CurTime)
+    RunScore.append(CurScore)
+
+    # print("JL reduction:{}s".format(end - begin))
+    # print ("JL score : ", metrics.adjusted_rand_score (label, JL_label))
+    print(RunTime)
+    print(RunScore)
