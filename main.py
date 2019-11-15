@@ -209,7 +209,7 @@ if __name__ == '__main__':
     RunScore = []
     LessDimension = 32
 
-    if ReadJoke:
+    if ReadJoke == 1:
         file = './jokeRate.txt'
         TweetMatrix = read(file)
     else:
@@ -220,7 +220,7 @@ if __name__ == '__main__':
     if ReadJoke == 1:
         T_list = [100, 1000,2000,5000,10000,20000]
     else:
-        T_list = [100, 1000,1500]
+        T_list = [100, 500, 700, 1000, 1200, 1500]
 
     #T_list = [100,500]
     for t in T_list:
