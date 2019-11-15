@@ -200,7 +200,7 @@ def kmeans(data):
 
 
 if __name__ == '__main__':
-    ReadJoke = sys.argv[1]
+    ReadJoke = int (sys.argv[1])
     topK = sys.argv[2]
     print("begin")
     print ('read joke ?', ReadJoke)
@@ -212,7 +212,9 @@ if __name__ == '__main__':
     if ReadJoke == 1:
         file = './jokeRate.txt'
         TweetMatrix = read(file)
+        print ("read joke!")
     else:
+        print ("read nips")
         file = './nips.txt'
         TweetMatrix = readDoc(file)
 
