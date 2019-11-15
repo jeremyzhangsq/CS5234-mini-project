@@ -241,10 +241,10 @@ if __name__ == '__main__':
             # print("no reduction:{}s".format(end - begin))
         else:
             begin = time.time()
-        label = kmeans(tweetMatrix)
-        end = time.time()
-        CurTime.append(end - begin)
-        CurScore.append(1.0)
+            label = kmeans(tweetMatrix)
+            end = time.time()
+            CurTime.append(end - begin)
+            CurScore.append(1.0)
 
         begin = time.time()
         pcaMatrix = pca(tweetMatrix, LessDimension)
