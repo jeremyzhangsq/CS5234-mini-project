@@ -12,6 +12,7 @@ import time
 from sklearn import random_projection
 from sklearn.cluster import KMeans
 from sklearn import metrics
+import sys 
 
 
 def read(name):
@@ -199,23 +200,29 @@ def kmeans(data):
 
 
 if __name__ == '__main__':
+    ReadJoke = sys.argv[1]
+    topK = sys.argv[2]
+    print("begin")
+    print ('read joke ?', ReadJoke)
+    print ('top k ?' ,topK)
     RunTime = []
     RunScore = []
     LessDimension = 32
-    print("begin")
-    # file = './jokeRate.txt'
-    # TweetMatrix = read(file)
-    file = './nips.txt'
-    TweetMatrix = readDoc(file)
 
-    topK = 1
+    if ReadJoke:
+        file = './jokeRate.txt'
+        TweetMatrix = read(file)
+    else:
+        file = './nips.txt'
+        TweetMatrix = readDoc(file)
 
-    if topK == 1:
+
+    if ReadJoke == 1:
         T_list = [100, 1000,2000,5000,10000,20000]
     else:
         T_list = [100, 1000,1500]
 
-    T_list = [100,500]
+    #T_list = [100,500]
     for t in T_list:
         CurTime = []
         CurScore = []
